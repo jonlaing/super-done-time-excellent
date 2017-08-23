@@ -1,0 +1,10 @@
+{
+    "name": "super-done-time-excellent",
+    "reason": {
+        "react-jsx": 2
+    },
+    "bs-dependencies": ["bs-react-native", "reason-react", "bs-batteries"],
+    "sources": [{
+        "dir": "re"
+    }]
+}
