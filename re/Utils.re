@@ -17,6 +17,8 @@ module ApplicativeMonad = {
 
 };
 
+/* Allow events to bubble up through child components to parent */
+/* TODO: Probably could use a better name here...*/
 module BubbleEvent = {
     type t 'u 'a = Event 'u (ApplicativeMonad.t 'a);
 
@@ -28,6 +30,11 @@ module BubbleEvent = {
     let apply (Event u a) b => Event u (ApplicativeMonad.apply a b);
 
     let (<.>) = apply;
+
+    let mapApply (Event u a) b =>
+        Event u (ApplicativeMonad.apply a (ApplicativeMonad.T b));
+
+    let (<..>) = mapApply;
 
     let bind (Event _ a) f => ApplicativeMonad.bind a f;
 

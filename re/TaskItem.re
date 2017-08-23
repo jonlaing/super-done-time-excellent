@@ -6,8 +6,7 @@ open BubbleEvent;
 let component = ReasonReact.statelessComponent "TaskItem";
 
 let make ::onPress ::task _children => {
-    let taskId = ApplicativeMonad.T task.id;
-    let handlePress () => popEvent (onPress <.> taskId);
+    let handlePress () => popEvent (onPress <..> task.id);
 
     {
         ...component,
