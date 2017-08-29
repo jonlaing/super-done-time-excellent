@@ -1,0 +1,1 @@
+__tests__/ApplicativeMonad_test.cmj : re/ApplicativeMonad.cmj

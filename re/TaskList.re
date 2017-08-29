@@ -17,6 +17,7 @@ let make ::tasks ::onPress _children => {
             |> ReasonReact.arrayToElement;
 
         <View style=Style.(style [flex 1., justifyContent `center, alignItems `center])>
+            <Text>(Utils.str "Task List")</Text>
             (taskList)
         </View>
     }

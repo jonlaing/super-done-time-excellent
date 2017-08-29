@@ -30,3 +30,8 @@ let pointsToTime p =>
     | 21 => Some 240
     | _ => None
     };
+
+let getById id =>
+    List.fold_left
+        (fun acc task => task.id == id ? Some task : acc)
+        None

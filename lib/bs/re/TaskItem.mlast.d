@@ -1,1 +1,1 @@
-re/TaskItem.cmj : re/Utils.cmj re/Task.cmj
+re/TaskItem.cmj : re/Utils.cmj re/Task.cmj re/BubbleEvent.cmj
