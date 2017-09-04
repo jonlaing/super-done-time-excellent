@@ -1,1 +1,1 @@
-re/App.cmj : re/Utils.cmj re/TaskView.cmj re/TaskList.cmj re/Task.cmj re/Routes.cmj re/BubbleEvent.cmj
+re/App.cmj : re/Actions.cmj re/Navigation.cmj re/Routes.cmj re/State.cmj

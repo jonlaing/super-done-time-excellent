@@ -10,6 +10,8 @@ S /Users/jonlaing/projects/super-done-re/node_modules/reason-react/lib/ocaml
 B /Users/jonlaing/projects/super-done-re/node_modules/reason-react/lib/ocaml
 S /Users/jonlaing/projects/super-done-re/node_modules/bs-batteries/lib/ocaml
 B /Users/jonlaing/projects/super-done-re/node_modules/bs-batteries/lib/ocaml
+S /Users/jonlaing/projects/super-done-re/node_modules/reason-react-native-navigation/lib/ocaml
+B /Users/jonlaing/projects/super-done-re/node_modules/reason-react-native-navigation/lib/ocaml
 S /Users/jonlaing/projects/super-done-re/node_modules/bs-jest/lib/ocaml
 B /Users/jonlaing/projects/super-done-re/node_modules/bs-jest/lib/ocaml
 S __tests__

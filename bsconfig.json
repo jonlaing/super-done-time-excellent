@@ -6,9 +6,11 @@
     "bs-dependencies": [
         "bs-react-native",
         "reason-react",
-        "bs-batteries"
+        "bs-batteries",
+        "reason-react-native-navigation"
     ],
     "bs-dev-dependencies" : ["bs-jest"],
+    "bsc-flags": ["-bs-super-errors"],
     "sources": [
         { "dir": "re" },
         {

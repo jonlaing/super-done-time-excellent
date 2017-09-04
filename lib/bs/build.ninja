@@ -2,74 +2,75 @@ bs_package_flags = -bs-package-name super-done-time-excellent
 src_root_dir = /Users/jonlaing/projects/super-done-re
 bsc = /Users/jonlaing/projects/super-done-re/node_modules/bs-platform/bin/bsc.exe
 bsdep = /Users/jonlaing/projects/super-done-re/node_modules/bs-platform/bin/bsb_helper.exe
-bsc_flags = -nostdlib -I '/Users/jonlaing/projects/super-done-re/node_modules/bs-platform/lib/ocaml' -no-alias-deps -color always -w -40+6+7+27+32..39+44+45
+bsc_flags = -nostdlib -I '/Users/jonlaing/projects/super-done-re/node_modules/bs-platform/lib/ocaml' -bs-super-errors -no-alias-deps -color always -w -40+6+7+27+32..39+44+45
 ppx_flags = 
-bs_package_includes = -I /Users/jonlaing/projects/super-done-re/node_modules/bs-react-native/lib/ocaml -I /Users/jonlaing/projects/super-done-re/node_modules/reason-react/lib/ocaml -I /Users/jonlaing/projects/super-done-re/node_modules/bs-batteries/lib/ocaml
+bs_package_includes = -I /Users/jonlaing/projects/super-done-re/node_modules/bs-react-native/lib/ocaml -I /Users/jonlaing/projects/super-done-re/node_modules/reason-react/lib/ocaml -I /Users/jonlaing/projects/super-done-re/node_modules/bs-batteries/lib/ocaml -I /Users/jonlaing/projects/super-done-re/node_modules/reason-react-native-navigation/lib/ocaml
 bs_package_dev_includes = -I /Users/jonlaing/projects/super-done-re/node_modules/bs-jest/lib/ocaml
 refmt = /Users/jonlaing/projects/super-done-re/node_modules/bs-platform/bin/refmt.exe
 reason_react_jsx = -ppx '/Users/jonlaing/projects/super-done-re/node_modules/bs-platform/bin/reactjs_jsx_ppx_2.exe'
 refmt_flags = --print binary
+namespace = 
 bsb_dir_group = 0
 bsc_lib_includes = -I re
 bsc_group_1_includes = -I __tests__
-rule build_ast_and_deps_from_reason_impl
+rule build_ast_and_module_sets_from_re
   command = ${bsc} -pp "${refmt} ${refmt_flags}" ${reason_react_jsx}  ${ppx_flags} ${bsc_flags} -c -o ${out} -bs-syntax-only -bs-binary-ast -impl ${in}
   description = [34mBuilding[39m [2m${out}[22m
-build __tests__/BubbleEvent_test.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/__tests__/BubbleEvent_test.re
+build re/App.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/App.re
 rule build_deps
-  command = ${bsdep} -g ${bsb_dir_group} -MD ${in}
+  command = ${bsdep} ${namespace} -g ${bsb_dir_group} -MD ${in}
   description = [34mBuilding[39m [2m${out}[22m
-build __tests__/BubbleEvent_test.mlast.d : build_deps __tests__/BubbleEvent_test.mlast
-  bsb_dir_group = 1
+build re/App.mlast.d : build_deps re/App.mlast
 rule build_cmj_cmi
-  command = ${bsc} ${bs_package_flags} -bs-assume-no-mli -bs-no-builtin-ppx-ml -bs-no-implicit-include ${bs_package_includes} ${bsc_lib_includes} ${bsc_extra_includes} ${bsc_flags} -o ${in} -c  ${in} ${postbuild}
+  command = ${bsc} ${bs_package_flags} -bs-assume-no-mli -bs-no-builtin-ppx-ml -bs-no-implicit-include ${bs_package_includes} ${bsc_lib_includes} ${bsc_extra_includes}  ${bsc_flags} -o ${out} -c  ${in} $postbuild
   depfile = ${in}.d
   description = [34mBuilding[39m [2m${out}[22m
-build __tests__/BubbleEvent_test.cmj $src_root_dir/lib/js/__tests__/BubbleEvent_test.js __tests__/BubbleEvent_test.cmi : build_cmj_cmi __tests__/BubbleEvent_test.mlast
-  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/__tests__
-  bs_package_includes = $bs_package_includes $bs_package_dev_includes
-  bsc_extra_includes = $bsc_group_1_includes
-build __tests__/ApplicativeMonad_test.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/__tests__/ApplicativeMonad_test.re
-build __tests__/ApplicativeMonad_test.mlast.d : build_deps __tests__/ApplicativeMonad_test.mlast
-  bsb_dir_group = 1
-build __tests__/ApplicativeMonad_test.cmj $src_root_dir/lib/js/__tests__/ApplicativeMonad_test.js __tests__/ApplicativeMonad_test.cmi : build_cmj_cmi __tests__/ApplicativeMonad_test.mlast
-  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/__tests__
-  bs_package_includes = $bs_package_includes $bs_package_dev_includes
-  bsc_extra_includes = $bsc_group_1_includes
-build re/App.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/App.re
-build re/App.mlast.d : build_deps re/App.mlast
-build re/App.cmj $src_root_dir/lib/js/re/App.js re/App.cmi : build_cmj_cmi re/App.mlast
+build re/App.cmj |  $src_root_dir/lib/js/re/App.js re/App.cmi : build_cmj_cmi re/App.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/Task.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/Task.re
+build re/Task.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/Task.re
 build re/Task.mlast.d : build_deps re/Task.mlast
-build re/Task.cmj $src_root_dir/lib/js/re/Task.js re/Task.cmi : build_cmj_cmi re/Task.mlast
+build re/Task.cmj |  $src_root_dir/lib/js/re/Task.js re/Task.cmi : build_cmj_cmi re/Task.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/Utils.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/Utils.re
+build re/State.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/State.re
+build re/State.mlast.d : build_deps re/State.mlast
+build re/State.cmj |  $src_root_dir/lib/js/re/State.js re/State.cmi : build_cmj_cmi re/State.mlast
+  bsc_flags = $bsc_flags -bs-re-error
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
+build re/Utils.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/Utils.re
 build re/Utils.mlast.d : build_deps re/Utils.mlast
-build re/Utils.cmj $src_root_dir/lib/js/re/Utils.js re/Utils.cmi : build_cmj_cmi re/Utils.mlast
+build re/Utils.cmj |  $src_root_dir/lib/js/re/Utils.js re/Utils.cmi : build_cmj_cmi re/Utils.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/Routes.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/Routes.re
+build re/Routes.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/Routes.re
 build re/Routes.mlast.d : build_deps re/Routes.mlast
-build re/Routes.cmj $src_root_dir/lib/js/re/Routes.js re/Routes.cmi : build_cmj_cmi re/Routes.mlast
+build re/Routes.cmj |  $src_root_dir/lib/js/re/Routes.js re/Routes.cmi : build_cmj_cmi re/Routes.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/TaskItem.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/TaskItem.re
+build re/Actions.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/Actions.re
+build re/Actions.mlast.d : build_deps re/Actions.mlast
+build re/Actions.cmj |  $src_root_dir/lib/js/re/Actions.js re/Actions.cmi : build_cmj_cmi re/Actions.mlast
+  bsc_flags = $bsc_flags -bs-re-error
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
+build re/TaskItem.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/TaskItem.re
 build re/TaskItem.mlast.d : build_deps re/TaskItem.mlast
-build re/TaskItem.cmj $src_root_dir/lib/js/re/TaskItem.js re/TaskItem.cmi : build_cmj_cmi re/TaskItem.mlast
+build re/TaskItem.cmj |  $src_root_dir/lib/js/re/TaskItem.js re/TaskItem.cmi : build_cmj_cmi re/TaskItem.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/TaskList.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/TaskList.re
+build re/TaskList.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/TaskList.re
 build re/TaskList.mlast.d : build_deps re/TaskList.mlast
-build re/TaskList.cmj $src_root_dir/lib/js/re/TaskList.js re/TaskList.cmi : build_cmj_cmi re/TaskList.mlast
+build re/TaskList.cmj |  $src_root_dir/lib/js/re/TaskList.js re/TaskList.cmi : build_cmj_cmi re/TaskList.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/TaskView.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/TaskView.re
+build re/TaskView.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/TaskView.re
 build re/TaskView.mlast.d : build_deps re/TaskView.mlast
-build re/TaskView.cmj $src_root_dir/lib/js/re/TaskView.js re/TaskView.cmi : build_cmj_cmi re/TaskView.mlast
+build re/TaskView.cmj |  $src_root_dir/lib/js/re/TaskView.js re/TaskView.cmi : build_cmj_cmi re/TaskView.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/BubbleEvent.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/BubbleEvent.re
-build re/BubbleEvent.mlast.d : build_deps re/BubbleEvent.mlast
-build re/BubbleEvent.cmj $src_root_dir/lib/js/re/BubbleEvent.js re/BubbleEvent.cmi : build_cmj_cmi re/BubbleEvent.mlast
+build re/Navigation.mlast : build_ast_and_module_sets_from_re $src_root_dir/re/Navigation.re
+build re/Navigation.mlast.d : build_deps re/Navigation.mlast
+build re/Navigation.cmj |  $src_root_dir/lib/js/re/Navigation.js re/Navigation.cmi : build_cmj_cmi re/Navigation.mlast
+  bsc_flags = $bsc_flags -bs-re-error
   bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build re/ApplicativeMonad.mlast : build_ast_and_deps_from_reason_impl $src_root_dir/re/ApplicativeMonad.re
-build re/ApplicativeMonad.mlast.d : build_deps re/ApplicativeMonad.mlast
-build re/ApplicativeMonad.cmj $src_root_dir/lib/js/re/ApplicativeMonad.js re/ApplicativeMonad.cmi : build_cmj_cmi re/ApplicativeMonad.mlast
-  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/re
-build build.ninja : phony  ||  re/ApplicativeMonad.mlast.d re/BubbleEvent.mlast.d re/TaskView.mlast.d re/TaskList.mlast.d re/TaskItem.mlast.d re/Routes.mlast.d re/Utils.mlast.d re/Task.mlast.d re/App.mlast.d __tests__/ApplicativeMonad_test.mlast.d __tests__/BubbleEvent_test.mlast.d
+build build.ninja : phony  ||  re/Navigation.mlast.d re/TaskView.mlast.d re/TaskList.mlast.d re/TaskItem.mlast.d re/Actions.mlast.d re/Routes.mlast.d re/Utils.mlast.d re/State.mlast.d re/Task.mlast.d re/App.mlast.d
